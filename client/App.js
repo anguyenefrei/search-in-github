@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, Button, View, TextInput } from 'react-native';
+import { StyleSheet, Text, Button, View, TextInput, Linking } from 'react-native';
 
 export default function App() {
-  const [username, setUsername] = useState("Dylan");
+  const [username, setUsername] = useState("4rtmelly");
   const [user, setUser] = useState({});
 
   async function search() {
     try {
-      const response = await fetch(`http://<YOUR_IPV4>:<YOUR_API_PORT>/api/users/${username}`);
+      const response = await fetch(`http://192.168.0.55:4242/api/users/${username}`);
       const user = await response.json();
 
-      setUser(user);
+      setUser(user.json);
+      console.log(user);
     } catch (error) {
       console.log(error.message);
     }
@@ -29,8 +30,10 @@ export default function App() {
         color="#841584"
       />
 
-      <Text>{user.username}</Text>
-    </View>
+<Text>{user.id}</Text>
+<Text>{user.bio}</Text>
+<Text onPress={() => Linking.openURL(user.html_url)}> {user.html_url} </Text>    
+</View>
   );
 }
 
