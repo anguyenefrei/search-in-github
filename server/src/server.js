@@ -1,38 +1,52 @@
 import express from "express";
-
+import cors from "cors"
 import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+const fetch = require('node-fetch');
 
+const fetchUser = async (username) => {
+  const user = await fetch(`https://api.github.com/users/${username}`);
+  console.log('jai fetch')
+  return await user.json()
+};
 
 export function launch(port) {
+  const prisma = new PrismaClient()
   const application = express();
-  const fetch = require('node-fetch');
-
+  application.use(express.json())
+  application.use(cors())
+  
   application.get("/", (request, response) => {
-    response.json("Hello, ici le serveur");
+    response.json("Hello, ici le serveur : utilisez /users/votre_login pour accéder à l'api github ! :) ");
   });
 
-  application.get("/api/users/:username", (request, response) => {
-    // const { username } = request.params
-    // async const user = await.prisma.user.findUnique({where: { login: username} })
-    // if(user) {
-    //   console.log("il y a un user avec le bon username dans la db")
-    //   // l'afficher dans notre client via les info recup de la DB
-    // }
-    // Step 1 - Does User exist in our Database
-    //   If True  -> Retrieve from our Database
-    //   If False -> Request Github API https://api.github.com/users/$USERNAME
-    //            -> Store User information in our Database
-    fetch('https://api.github.com/users/'+request.params.username)
-          .then(res => res.json())
-          .then(json => {
-            response.set('Access-Control-Allow-Origin', '*')
-            .json({json});
-      })
-    // response.json({ username: request.params.username });
+  application.get("/users/:username", async (request, response) => {
+    const { username } = request.params
+
+    let user = await prisma.user.findUnique({where: { login: username} })
+
+    if(user) {
+      console.log("il y'a un user avec le bon username dans la db")
+      response.json({ data: { user } })
+    }
+    user = await fetchUser(username)
+      console.log(user)
+      for(const key in user) {
+        if(user[key] === null){
+          user[key] = ''
+        }
+        if(user[key] === true){
+          user[key] = true
+        }
+        if(user[key] === false){
+          user[key] = false
+        }
+      }
+    await prisma.user.create({data : user})
+    response.json({ data: { user } })
+
   });
   
   application.listen(port, () => {
-    console.log(`server started at http://192.168.0.55:${port}`);
+    console.log(`server started at http://localhost:${port}`);
   });
 }
