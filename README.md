@@ -13,3 +13,5 @@ cd client
 npm start
 ```
 - expo client appears then scan the QR code on your expo app on phone to access the application
+- you should be able to see this :
+![Expo Screenshot](https://user-images.githubusercontent.com/93524654/145716346-ed1b5a5e-780e-4e0a-8332-8ebc0d0d4732.jpg)
