@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, Button,TouchableHighlight,TouchableNativeFeedback, View, TextInput, Linking } from 'react-native';
+import { StyleSheet, Text, Image,Button,TouchableHighlight,TouchableNativeFeedback, View, TextInput, Linking } from 'react-native';
 
 export default function App() {
   const [username, setUsername] = useState("");
@@ -8,7 +8,7 @@ export default function App() {
   async function search() {
     try {
       console.log(username)
-      const response = await fetch(`http://localhost:4242/users/${username}`);
+      const response = await fetch(`http://192.168.1.55:4242/users/${username}`);
       const user = await response.json();
       setUser(user.data.user);
     } catch (error) {
@@ -27,33 +27,33 @@ export default function App() {
       />
       <TouchableNativeFeedback
       onPress={search}
-      style={styles.zoneB}
       >
         <View style={styles.button}>
           <Text style={styles.buttonText}>Search</Text>
         </View>
       </TouchableNativeFeedback>
-
-      <Button
-      color={'green'}
-      onPress={search}
-      title={'press me'}
-      />
-      
-
       <View style={styles.separator}>
-        <Text style={ {fontSize: 20, textAlign: 'center', paddingTop: 10}}> I N F O R M A T I O N S </Text>
+        <Text style={ {fontSize: 20,marginLeft: 85, marginTop: 10}}> I N F O R M A T I O N S </Text>
       </View>
+
+      <Image
+      style={styles.picProfil}
+      source={
+        {uri: `${user.avatar_url}`}
+      }
+      >
+      </Image>
+
+
+      
       <View style={styles.infoContainer}>
         <Text style={styles.infoText}> Id : {user.id}</Text>
         <Text style={styles.infoText}> Biography : {user.bio}</Text>
         <Text style={styles.infoText}> Followers : {user.followers}</Text>
         <Text style={styles.infoText}> Following : {user.following}</Text>
         <Text style={styles.infoText}> Location : {user.location}</Text>
-        <Text style={styles.infoText}> Twitter Username : {user.twitter_username}</Text>
-        <Text style={styles.infoText}> Nombre repos publique : {user.public_repos}</Text>
-        <Text style={styles.infoText} onPress={() => Linking.openURL(user.repos_url)}> Link repository : {user.repos_url}</Text>
-        <Text style={styles.infoText} onPress={() => Linking.openURL(user.html_url)}> Link account {user.html_url} </Text>    
+        <Text style={styles.infoLink} onPress={() => Linking.openURL(user.repos_url)}> Link repository : {user.repos_url}</Text>
+        <Text style={styles.infoLink} onPress={() => Linking.openURL(user.html_url)}> Link account {user.html_url} </Text>    
       </View>
 
       
@@ -66,39 +66,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#8FBC8F',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   H2: {
     fontSize: 30,
     fontWeight: 'bold',
-    position: 'absolute',
-    top: 20
+    justifyContent: 'flex-start',
+    paddingTop: 20
   },
   input: {
-    position: 'absolute',
-    top: 70,
-    left: 30,
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    marginTop: 20,
+    marginLeft: 100,
     borderColor: '#000000',
     backgroundColor: 'white',
     width:  160,
     height: 30,
     borderRadius: 5
   },
-  zoneB: {
-    position: 'absolute',
-    width: 200,
-    backgroundColor: '#000000',
-    top: 60,
-    right: 20
-  },
   button: {
-    marginBottom: 30,
-    width: 130,
+    width: 160,
     height: 30,
-    position: 'absolute',
-    top: 70,
-    right: 30,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginTop: 20,
+    marginLeft: 100,
     backgroundColor: '#006400',
     borderRadius: 5
   },
@@ -108,28 +100,38 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   separator: {
-    position: 'absolute',
-    top: 120,
-    width: 450,
-    height: 50,
-    backgroundColor: '#2E8B57'
-  },
-  separatorBot: {
-    position: 'absolute',
-    bottom: 50,
+    justifyContent: 'flex-start',
+    marginTop: 20,
     width: 450,
     height: 50,
     backgroundColor: '#2E8B57'
   },
   infoContainer: {
+    opacity: 0.6,
     flexDirection: 'column',
-    position: 'absolute',
-    top: 190,
-    left: 20
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
+    marginLeft: 20,
+    paddingBottom: 20,
+    paddingLeft: 10,
+    height: 350,
+    marginRight: 20,
+    borderRadius: 20
   },
   infoText: {
     fontSize: 15,
-    // fontWeight: 'bold',
     paddingTop: 20
+  },
+  infoLink: {
+    color: '#4169E1'
+  },
+  picProfil: {
+    borderRadius: 50,
+    justifyContent: 'center',
+    marginTop: 30,
+    marginBottom: 30,
+    marginLeft: 135,
+    width: 100,
+    height: 100
   }
 });

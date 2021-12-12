@@ -11,9 +11,9 @@ datasource db {
 }
 
 model User {
-  login                       String  @unique
-  id                          Int?     @unique
-  node_id                     String?  @unique
+  login                       String @unique
+  id                          Int    
+  node_id                     String?  
   avatar_url                  String?
   gravatar_id                 String?
   url                         String?
@@ -34,7 +34,7 @@ model User {
   blog                        String?
   location                    String?
   email                       String?
-  hireable                    String?
+  hireable                    Boolean?
   bio                         String?
   twitter_username            String?
   public_repos                Int?

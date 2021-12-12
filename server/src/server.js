@@ -24,11 +24,8 @@ export function launch(port) {
 
     let user = await prisma.user.findUnique({where: { login: username} })
 
-    if(user) {
-      console.log("il y'a un user avec le bon username dans la db")
-      response.json({ data: { user } })
-    }
-    user = await fetchUser(username)
+    if(!user){
+      user = await fetchUser(username)
       console.log(user)
       for(const key in user) {
         if(user[key] === null){
@@ -40,13 +37,15 @@ export function launch(port) {
         if(user[key] === false){
           user[key] = false
         }
+        
       }
-    await prisma.user.create({data : user})
+      await prisma.user.create({data : user})
+    }
     response.json({ data: { user } })
 
   });
   
   application.listen(port, () => {
-    console.log(`server started at http://localhost:${port}`);
+    console.log(`server started at http://192.168.1.55:${port}`);
   });
 }
