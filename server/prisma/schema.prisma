@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   login                       String @unique
-  id                          Int    
+  id                          Int    @id
   node_id                     String?  
   avatar_url                  String?
   gravatar_id                 String?
@@ -28,13 +28,13 @@ model User {
   events_url                  String?
   received_events_url         String?
   type                        String?
-  site_admin                  Boolean?
+  site_admin                  String?
   name                        String?
   company                     String?
   blog                        String?
   location                    String?
   email                       String?
-  hireable                    Boolean?
+  hireable                    String?
   bio                         String?
   twitter_username            String?
   public_repos                Int?

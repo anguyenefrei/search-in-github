@@ -21,28 +21,30 @@ export function launch(port) {
 
   application.get("/users/:username", async (request, response) => {
     const { username } = request.params
-
     let user = await prisma.user.findUnique({where: { login: username} })
 
-    if(!user){
+    if(user){
+      console.log('user dans la db')
+      response.json({ data: { user } })
+    }
+
+    if (!user) {
+      console.log('user pas dans la db')
       user = await fetchUser(username)
-      console.log(user)
       for(const key in user) {
         if(user[key] === null){
           user[key] = ''
         }
         if(user[key] === true){
-          user[key] = true
+          user[key] = 'true'
         }
         if(user[key] === false){
-          user[key] = false
+          user[key] = 'false'
         }
-        
       }
-      await prisma.user.create({data : user})
+      // await prisma.user.create({data : user})
+      response.json({ data: { user } })
     }
-    response.json({ data: { user } })
-
   });
   
   application.listen(port, () => {
